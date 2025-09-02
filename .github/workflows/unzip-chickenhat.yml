@@ -1,1 +1,26 @@
+name: Unzip ChickenHatPlatform_705.zip
 
+on:
+  workflow_dispatch: # تشغيل يدوي من واجهة GitHub Actions
+  push:              # أو عند كل Push، يمكنك حذفها إذا أردت فقط التشغيل اليدوي
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract ChickenHatPlatform_705.zip
+        run: |
+          unzip -o ChickenHatPlatform_705.zip -d ./
+      
+      - name: Show extracted files
+        run: ls -la
+
+      - name: Auto-commit extracted files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Extracted files from ChickenHatPlatform_705.zip"
+          branch: ${{ github.ref_name }}
+          file_pattern: "ChickenHatPlatform-705/*"
