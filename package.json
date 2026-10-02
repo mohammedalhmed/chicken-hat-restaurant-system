@@ -111,7 +111,7 @@
     "vite": "^5.4.19"
   },
   "optionalDependencies": {
-    "bufferutil": "^4.0.8"
+    "bufferutil": "^4.1.0"
   },
   "description": "Arabic-first full-stack restaurant ordering, reservation, and operations management system.",
   "author": "Mohammed Alhadrami / MAM_Tkno"
