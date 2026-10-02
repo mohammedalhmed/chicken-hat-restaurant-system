@@ -4,3 +4,16 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Runtime customer/order data
+data/orders.json
+data/order-items.json
+data/users.json
+data/addresses.json
+data/reservations.json
+
+# Local tooling
+.local/
+.replit
+attached_assets/
+*.zip
