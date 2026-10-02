@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 
 interface RegisterForm {
@@ -54,12 +53,12 @@ export default function RegisterPage() {
         }),
       });
       
+      const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "خطأ في إنشاء الحساب");
+        throw new Error(payload.message || "خطأ في إنشاء الحساب");
       }
-      
-      return response.json();
+
+      return payload;
     },
     onSuccess: (data) => {
       toast({
@@ -270,14 +269,7 @@ export default function RegisterPage() {
                     required
                   />
                   <label htmlFor="acceptTerms" className="font-cairo text-sm text-gray-600">
-                    أوافق على{" "}
-                    <a href="#" className="text-chicken-orange hover:underline">
-                      الشروط والأحكام
-                    </a>
-                    {" "}و{" "}
-                    <a href="#" className="text-chicken-orange hover:underline">
-                      سياسة الخصوصية
-                    </a>
+                    أوافق على إنشاء الحساب واستخدام بياناته لتقديم خدمات الطلب والمتابعة.
                   </label>
                 </div>
 
@@ -299,29 +291,6 @@ export default function RegisterPage() {
                   )}
                 </Button>
               </form>
-
-              <Separator className="my-6" />
-
-              {/* Social Registration */}
-              <div className="space-y-3">
-                <Button 
-                  type="button"
-                  variant="outline" 
-                  className="w-full font-cairo border-gray-300 hover:bg-gray-50"
-                >
-                  <i className="fab fa-google text-red-500 ml-2"></i>
-                  التسجيل بـ Google
-                </Button>
-                
-                <Button 
-                  type="button"
-                  variant="outline" 
-                  className="w-full font-cairo border-gray-300 hover:bg-gray-50"
-                >
-                  <i className="fab fa-apple text-black ml-2"></i>
-                  التسجيل بـ Apple ID
-                </Button>
-              </div>
 
               {/* Login Link */}
               <div className="text-center mt-6">
