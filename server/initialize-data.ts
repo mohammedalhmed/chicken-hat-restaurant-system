@@ -1,6 +1,5 @@
 
 import { fileStorage } from './file-storage';
-import { v4 as uuidv4 } from 'uuid';
 
 async function initializeMenuItems() {
   const categories = await fileStorage.getAllCategories();
