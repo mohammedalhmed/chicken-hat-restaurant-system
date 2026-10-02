@@ -10,6 +10,13 @@ import { requireAdmin } from "./admin-auth";
 import { insertOrderSchema, insertReservationSchema, insertMenuItemSchema, insertCategorySchema, insertWebsiteSettingsSchema } from "@shared/schema";
 
 // Configure multer for file uploads
+const ALLOWED_IMAGE_TYPES: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "image/gif": ".gif",
+  "image/webp": ".webp",
+};
+
 const storage_ = multer.diskStorage({
   destination: (req, file, cb) => {
     let uploadPath = 'uploads/general';
@@ -32,7 +39,8 @@ const storage_ = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
+    const extension = ALLOWED_IMAGE_TYPES[file.mimetype];
+    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${extension}`;
     cb(null, uniqueName);
   }
 });
@@ -43,10 +51,10 @@ const upload = multer({
     fileSize: 5 * 1024 * 1024, // 5MB limit
   },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    if (ALLOWED_IMAGE_TYPES[file.mimetype]) {
       cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed'));
+      cb(new Error('Only JPEG, PNG, GIF, and WebP images are allowed'));
     }
   }
 });
