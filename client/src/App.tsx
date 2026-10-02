@@ -29,11 +29,19 @@ import MenuManagement from "@/pages/admin/menu-management";
 import OrdersManagement from "@/pages/admin/orders";
 import ReservationsManagement from "@/pages/admin/reservations";
 import WebsiteSettings from "@/pages/admin/website-settings";
+import AdminLoginPage from "@/pages/admin/login";
+import AdminGuard from "@/components/admin/admin-guard";
 
 // Layout Components
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 
+
+const ProtectedAdminDashboard = () => <AdminGuard><AdminDashboard /></AdminGuard>;
+const ProtectedMenuManagement = () => <AdminGuard><MenuManagement /></AdminGuard>;
+const ProtectedOrdersManagement = () => <AdminGuard><OrdersManagement /></AdminGuard>;
+const ProtectedReservationsManagement = () => <AdminGuard><ReservationsManagement /></AdminGuard>;
+const ProtectedWebsiteSettings = () => <AdminGuard><WebsiteSettings /></AdminGuard>;
 
 function App() {
   return (
@@ -58,11 +66,12 @@ function App() {
             <Route path="/register" component={RegisterPage} />
 
             {/* Admin Routes */}
-            <Route path="/admin" component={AdminDashboard} />
-            <Route path="/admin/menu" component={MenuManagement} />
-            <Route path="/admin/orders" component={OrdersManagement} />
-            <Route path="/admin/reservations" component={ReservationsManagement} />
-            <Route path="/admin/settings" component={WebsiteSettings} />
+            <Route path="/admin/login" component={AdminLoginPage} />
+            <Route path="/admin" component={ProtectedAdminDashboard} />
+            <Route path="/admin/menu" component={ProtectedMenuManagement} />
+            <Route path="/admin/orders" component={ProtectedOrdersManagement} />
+            <Route path="/admin/reservations" component={ProtectedReservationsManagement} />
+            <Route path="/admin/settings" component={ProtectedWebsiteSettings} />
 
             <Route component={NotFoundPage} />
           </Switch>
