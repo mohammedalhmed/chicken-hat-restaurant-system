@@ -1,12 +1,37 @@
 import express from "express";
+import session from "express-session";
+import createMemoryStore from "memorystore";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic } from "./vite";
 import { initializeMenuItems } from "./initialize-data";
 import { fileStorage } from "./file-storage";
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+const sessionSecret = process.env.SESSION_SECRET;
+
+if (!sessionSecret || sessionSecret.length < 32) {
+  throw new Error("SESSION_SECRET must be set to a strong value of at least 32 characters");
+}
+
+const MemoryStore = createMemoryStore(session);
+
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: false, limit: "1mb" }));
+app.use(
+  session({
+    name: "chickenhat.sid",
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    store: new MemoryStore({ checkPeriod: 24 * 60 * 60 * 1000 }),
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
+  }),
+);
 
 (async () => {
   // Ensure file-backed storage is initialized before sample data or routes use it.
