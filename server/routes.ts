@@ -152,6 +152,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
+      if (user.role !== "customer") {
+        return res.status(403).json({ message: "Use the dedicated admin access page" });
+      }
+
       req.session.userId = user.id;
       req.session.userRole = user.role;
 
