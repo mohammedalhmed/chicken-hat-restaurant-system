@@ -1,5 +1,5 @@
 {
-  "name": "rest-express",
+  "name": "chicken-hat-restaurant-system",
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
@@ -112,5 +112,7 @@
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
-  }
+  },
+  "description": "Arabic-first full-stack restaurant ordering, reservation, and operations management system.",
+  "author": "Mohammed Alhadrami / MAM_Tkno"
 }
