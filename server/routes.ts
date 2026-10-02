@@ -6,6 +6,7 @@ import path from "path";
 import fs from "fs";
 import { storage } from "./storage";
 import { z } from "zod";
+import { requireAdmin } from "./admin-auth";
 import { insertOrderSchema, insertReservationSchema, insertMenuItemSchema, insertCategorySchema, insertWebsiteSettingsSchema } from "@shared/schema";
 
 // Configure multer for file uploads
@@ -51,6 +52,14 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  app.get("/api/admin/session", requireAdmin, (_req, res) => {
+    res.json({ authenticated: true });
+  });
+
+  // Protect sensitive administrative API namespaces.
+  app.use("/api/admin", requireAdmin);
+  app.use("/api/upload", requireAdmin);
+
   // Serve static files from uploads directory with proper headers
   app.use('/uploads', express.static('uploads', {
     maxAge: '1y',
@@ -141,7 +150,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/orders", async (req, res) => {
+  app.get("/api/orders", requireAdmin, async (req, res) => {
     try {
       const orders = await storage.getAllOrders();
       res.json(orders);
@@ -151,7 +160,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/orders/:id", async (req, res) => {
+  app.get("/api/orders/:id", requireAdmin, async (req, res) => {
     try {
       const order = await storage.getOrder(req.params.id);
       if (!order) {
@@ -164,7 +173,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/orders/:id/status", async (req, res) => {
+  app.patch("/api/orders/:id/status", requireAdmin, async (req, res) => {
     try {
       const { status } = req.body;
       if (!status) {
@@ -194,7 +203,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/reservations", async (req, res) => {
+  app.get("/api/reservations", requireAdmin, async (req, res) => {
     try {
       const reservations = await storage.getAllReservations();
       res.json(reservations);
@@ -204,7 +213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/reservations/:id/status", async (req, res) => {
+  app.patch("/api/reservations/:id/status", requireAdmin, async (req, res) => {
     try {
       const { status } = req.body;
       if (!status) {
@@ -361,7 +370,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/website-settings", async (req, res) => {
+  app.put("/api/website-settings", requireAdmin, async (req, res) => {
     try {
       const settingsData = insertWebsiteSettingsSchema.parse(req.body);
       const updatedSettings = await storage.updateWebsiteSettings(settingsData);
@@ -378,7 +387,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/website-settings/initialize", async (req, res) => {
+  app.post("/api/website-settings/initialize", requireAdmin, async (req, res) => {
     try {
       const settings = await storage.initializeWebsiteSettings();
       res.json(settings);
