@@ -56,7 +56,6 @@ export default function MenuSection() {
                     : "border-chicken-orange text-chicken-orange hover:bg-chicken-orange hover:text-white"
                 }`}
               >
-                {category.icon && <i className={`${category.icon} ml-2`}></i>}
                 {category.name}
               </Button>
             ))
@@ -65,7 +64,7 @@ export default function MenuSection() {
 
         <div className="w-24 h-1 bg-chicken-orange mx-auto mt-6 mb-8"></div>
 
-        <MenuGrid categoryFilter={selectedCategory} />
+        <MenuGrid selectedCategory={selectedCategory} />
       </div>
     </section>
   );
