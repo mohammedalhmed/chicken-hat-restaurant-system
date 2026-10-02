@@ -24,18 +24,14 @@ Arabic-first **full-stack restaurant ordering and management system** for a frie
 
 ## Architecture
 
-```text
-Customer / Staff / Admin
-          ↓
-      React UI
-          ↓
- REST API + Sessions
-          ↓
- Express.js Backend
-          ↓
- Drizzle ORM
-          ↓
-     PostgreSQL
+```mermaid
+flowchart TD
+    U["Customer / Staff / Admin"] --> UI["React + TypeScript UI"]
+    UI --> API["REST API + Sessions"]
+    API --> EX["Express.js Backend"]
+    EX --> ORM["Drizzle ORM"]
+    ORM --> DB["PostgreSQL"]
+    EX --> PAY["Stripe"]
 ```
 
 The application separates client state from server state: Zustand handles persisted cart state, while TanStack Query manages API-backed data.
