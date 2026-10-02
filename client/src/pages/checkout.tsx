@@ -457,7 +457,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="text-left">
                         <p className="font-cairo font-semibold text-sm text-chicken-orange">
-                          {(parseFloat(item.price) * item.quantity).toFixed(2)} ريال
+                          {(item.price * item.quantity).toFixed(2)} ريال
                         </p>
                       </div>
                     </div>
