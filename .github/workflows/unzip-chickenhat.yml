@@ -1,26 +1,33 @@
-name: Unzip ChickenHatPlatform_705.zip
+name: Extract Chicken Hat Source
 
 on:
-  workflow_dispatch: # تشغيل يدوي من واجهة GitHub Actions
-  push:              # أو عند كل Push، يمكنك حذفها إذا أردت فقط التشغيل اليدوي
+  workflow_dispatch:
+  push:
+    paths:
+      - "ChickenHatPlatform_705.zip"
+      - ".github/workflows/unzip-chickenhat.yml"
+
+permissions:
+  contents: write
 
 jobs:
-  unzip:
+  extract-source:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract ChickenHatPlatform_705.zip
+      - name: Extract source archive
         run: |
-          unzip -o ChickenHatPlatform_705.zip -d ./
-      
-      - name: Show extracted files
-        run: ls -la
+          rm -rf ChickenHatPlatform-705
+          unzip -q ChickenHatPlatform_705.zip -d ./
+          rm -rf ChickenHatPlatform-705/.git
+          rm -f ChickenHatPlatform-705/replit.md
+          find ChickenHatPlatform-705 -type f \( -name ".env" -o -name ".env.local" -o -name ".env.production" -o -name ".env.development" \) -delete
 
-      - name: Auto-commit extracted files
+      - name: Commit extracted source
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Extracted files from ChickenHatPlatform_705.zip"
+          commit_message: "Extract Chicken Hat source for repository browsing"
           branch: ${{ github.ref_name }}
-          file_pattern: "ChickenHatPlatform-705/*"
+          file_pattern: "ChickenHatPlatform-705"
