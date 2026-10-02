@@ -2,6 +2,19 @@
 
 Arabic-first **full-stack restaurant ordering and management system** for a fried-chicken business. The project combines a customer storefront with operational tools for orders, menu items, reservations, users, and payments.
 
+## Portfolio Proof
+
+| Area | Evidence |
+|---|---|
+| **Problem** | Bring customer ordering, reservations, menu operations, users, and administration into one Arabic-first restaurant system. |
+| **Solution** | React/TypeScript frontend with an Express backend, PostgreSQL/Drizzle data layer, sessions, role-based workflows, and payment integration support. |
+| **Runtime stack** | [package.json](package.json) |
+| **Database configuration** | [drizzle.config.ts](drizzle.config.ts) |
+| **Source package** | [ChickenHatPlatform_705.zip](ChickenHatPlatform_705.zip) |
+| **Current repository status** | The complete source is currently preserved as an archive while configuration files remain directly browsable. The next repository-cleanup step is to expand the source into normal GitHub folders without losing history. |
+
+
+
 ## Highlights
 
 - Arabic RTL customer experience.
