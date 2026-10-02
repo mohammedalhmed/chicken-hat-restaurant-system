@@ -23,7 +23,7 @@ export default function CartItemComponent({ item }: CartItemProps) {
       {/* صورة المنتج */}
       <div className="flex-shrink-0">
         <img
-          src={item.image || "/placeholder-food.jpg"}
+          src={item.imageUrl || "/placeholder-food.jpg"}
           alt={item.name}
           className="w-16 h-16 object-cover rounded-lg"
         />
@@ -34,9 +34,6 @@ export default function CartItemComponent({ item }: CartItemProps) {
         <h4 className="text-sm font-semibold text-chicken-black font-cairo truncate">
           {item.name}
         </h4>
-        <p className="text-xs text-gray-500 font-cairo">
-          {item.category}
-        </p>
         <p className="text-sm font-bold text-chicken-orange font-amiri">
           {item.price.toFixed(2)} ريال
         </p>
