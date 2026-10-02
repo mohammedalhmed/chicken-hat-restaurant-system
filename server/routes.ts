@@ -125,10 +125,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = orderSchema.parse(req.body);
       const { items, latitude, longitude, ...orderData } = validatedData;
       
-      // Convert latitude and longitude strings to decimal numbers if provided
       const locationData = latitude && longitude ? {
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude),
+        latitude,
+        longitude,
       } : {};
 
       const order = await storage.createOrder({ ...orderData, ...locationData }, items);
