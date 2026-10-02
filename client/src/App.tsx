@@ -33,7 +33,6 @@ import WebsiteSettings from "@/pages/admin/website-settings";
 // Layout Components
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import CartSidebar from "@/components/cart/cart-sidebar";
 
 
 function App() {
@@ -69,7 +68,6 @@ function App() {
           </Switch>
         </main>
         <Footer />
-        <CartSidebar />
         <Toaster />
       </div>
     </QueryClientProvider>
