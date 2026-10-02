@@ -146,10 +146,10 @@ export default function CartPage() {
                             {/* Price */}
                             <div className="text-left">
                               <div className="font-cairo font-bold text-lg text-chicken-orange">
-                                {(parseFloat(item.price) * item.quantity).toFixed(2)} ريال
+                                {(item.price * item.quantity).toFixed(2)} ريال
                               </div>
                               <div className="font-cairo text-sm text-gray-500">
-                                {parseFloat(item.price).toFixed(2)} ريال للقطعة
+                                {item.price.toFixed(2)} ريال للقطعة
                               </div>
                             </div>
                           </div>
