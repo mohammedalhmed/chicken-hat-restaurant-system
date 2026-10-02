@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import type {
   User,
   InsertUser,
@@ -80,7 +80,7 @@ export class FileStorage {
     if (categories.length === 0) {
       const defaultCategories: Category[] = [
         {
-          id: uuidv4(),
+          id: randomUUID(),
           name: 'Fried Chicken',
           nameAr: 'دجاج مقلي',
           description: 'Crispy fried chicken pieces',
@@ -88,7 +88,7 @@ export class FileStorage {
           createdAt: new Date(),
         },
         {
-          id: uuidv4(),
+          id: randomUUID(),
           name: 'Broasted Chicken',
           nameAr: 'دجاج بروستد',
           description: 'Tender broasted chicken',
@@ -96,7 +96,7 @@ export class FileStorage {
           createdAt: new Date(),
         },
         {
-          id: uuidv4(),
+          id: randomUUID(),
           name: 'Sides',
           nameAr: 'الأطباق الجانبية',
           description: 'Delicious side dishes',
@@ -104,7 +104,7 @@ export class FileStorage {
           createdAt: new Date(),
         },
         {
-          id: uuidv4(),
+          id: randomUUID(),
           name: 'Beverages',
           nameAr: 'المشروبات',
           description: 'Refreshing drinks',
@@ -119,7 +119,7 @@ export class FileStorage {
     const settings = await readFile<WebsiteSettings>(FILES.websiteSettings);
     if (settings.length === 0) {
       const defaultSettings: WebsiteSettings = {
-        id: uuidv4(),
+        id: randomUUID(),
         primaryColor: '#FF6B35',
         secondaryColor: '#FFB800',
         accentColor: '#1A1A1A',
@@ -175,8 +175,12 @@ export class FileStorage {
   async createUser(userData: InsertUser): Promise<User> {
     const users = await readFile<User>(FILES.users);
     const newUser: User = {
-      id: uuidv4(),
-      ...userData,
+      id: randomUUID(),
+      fullName: userData.fullName,
+      email: userData.email,
+      passwordHash: userData.passwordHash,
+      phoneNumber: userData.phoneNumber,
+      role: userData.role ?? "customer",
       createdAt: new Date(),
       updatedAt: null,
     };
@@ -194,8 +198,15 @@ export class FileStorage {
   async createAddress(addressData: InsertAddress): Promise<Address> {
     const addresses = await readFile<Address>(FILES.addresses);
     const newAddress: Address = {
-      id: uuidv4(),
-      ...addressData,
+      id: randomUUID(),
+      userId: addressData.userId,
+      street: addressData.street,
+      city: addressData.city,
+      area: addressData.area,
+      buildingNumber: addressData.buildingNumber ?? null,
+      apartmentNumber: addressData.apartmentNumber ?? null,
+      details: addressData.details ?? null,
+      isDefault: addressData.isDefault ?? false,
       createdAt: new Date(),
       updatedAt: null,
     };
@@ -213,8 +224,11 @@ export class FileStorage {
   async createCategory(categoryData: InsertCategory): Promise<Category> {
     const categories = await readFile<Category>(FILES.categories);
     const newCategory: Category = {
-      id: uuidv4(),
-      ...categoryData,
+      id: randomUUID(),
+      name: categoryData.name,
+      nameAr: categoryData.nameAr,
+      description: categoryData.description ?? null,
+      orderIndex: categoryData.orderIndex ?? null,
       createdAt: new Date(),
     };
     categories.push(newCategory);
@@ -269,8 +283,16 @@ export class FileStorage {
   async createMenuItem(itemData: InsertMenuItem): Promise<MenuItem> {
     const menuItems = await readFile<MenuItem>(FILES.menuItems);
     const newItem: MenuItem = {
-      id: uuidv4(),
-      ...itemData,
+      id: randomUUID(),
+      name: itemData.name,
+      nameAr: itemData.nameAr,
+      description: itemData.description ?? null,
+      descriptionAr: itemData.descriptionAr ?? null,
+      price: itemData.price,
+      imageUrl: itemData.imageUrl ?? null,
+      categoryId: itemData.categoryId,
+      isAvailable: itemData.isAvailable ?? true,
+      calories: itemData.calories ?? null,
       createdAt: new Date(),
       updatedAt: null,
     };
@@ -296,22 +318,36 @@ export class FileStorage {
   }
 
   // Order operations
-  async createOrder(orderData: InsertOrder & { latitude?: number; longitude?: number }, items: Omit<InsertOrderItem, 'orderId'>[]): Promise<OrderWithItems> {
+  async createOrder(orderData: InsertOrder, items: Omit<InsertOrderItem, 'orderId'>[]): Promise<OrderWithItems> {
     const orders = await readFile<Order>(FILES.orders);
     const orderItems = await readFile<OrderItem>(FILES.orderItems);
     const menuItems = await readFile<MenuItem>(FILES.menuItems);
 
     const newOrder: Order = {
-      id: uuidv4(),
-      ...orderData,
-      latitude: orderData.latitude?.toString() || null,
-      longitude: orderData.longitude?.toString() || null,
+      id: randomUUID(),
+      userId: orderData.userId ?? null,
+      guestName: orderData.guestName ?? null,
+      guestPhone: orderData.guestPhone ?? null,
+      guestEmail: orderData.guestEmail ?? null,
+      street: orderData.street,
+      city: orderData.city,
+      area: orderData.area,
+      buildingNumber: orderData.buildingNumber ?? null,
+      apartmentNumber: orderData.apartmentNumber ?? null,
+      addressDetails: orderData.addressDetails ?? null,
+      latitude: orderData.latitude ?? null,
+      longitude: orderData.longitude ?? null,
+      totalAmount: orderData.totalAmount,
+      status: orderData.status ?? "pending",
+      paymentMethod: orderData.paymentMethod,
+      paymentStatus: orderData.paymentStatus ?? "unpaid",
+      notes: orderData.notes ?? null,
       createdAt: new Date(),
       updatedAt: null,
     };
 
     const newOrderItems: OrderItem[] = items.map(item => ({
-      id: uuidv4(),
+      id: randomUUID(),
       orderId: newOrder.id,
       menuItemId: item.menuItemId,
       quantity: item.quantity,
@@ -405,8 +441,16 @@ export class FileStorage {
   async createReservation(reservationData: InsertReservation): Promise<Reservation> {
     const reservations = await readFile<Reservation>(FILES.reservations);
     const newReservation: Reservation = {
-      id: uuidv4(),
-      ...reservationData,
+      id: randomUUID(),
+      userId: reservationData.userId ?? null,
+      guestName: reservationData.guestName ?? null,
+      guestPhone: reservationData.guestPhone,
+      guestEmail: reservationData.guestEmail ?? null,
+      reservationDate: reservationData.reservationDate,
+      numberOfGuests: reservationData.numberOfGuests,
+      specialOccasion: reservationData.specialOccasion ?? null,
+      notes: reservationData.notes ?? null,
+      status: reservationData.status ?? "pending",
       createdAt: new Date(),
       updatedAt: null,
     };
@@ -450,7 +494,7 @@ export class FileStorage {
       settings[0] = { ...settings[0], ...settingsData, updatedAt: new Date() };
     } else {
       const newSettings: WebsiteSettings = {
-        id: uuidv4(),
+        id: randomUUID(),
         primaryColor: '#FF6B35',
         secondaryColor: '#FFB800',
         accentColor: '#1A1A1A',
