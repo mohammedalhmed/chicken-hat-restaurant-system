@@ -220,7 +220,7 @@ export default function EventsPage() {
                             <i className="fas fa-fire ml-1"></i>
                             الأكثر طلباً
                           </Badge>
-                        )}
+                        </div>
                       )}
 
                       {/* Date Overlay */}
