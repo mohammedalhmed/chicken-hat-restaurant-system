@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button } from './button';
 import { Label } from './label';
 import { useToast } from '@/hooks/use-toast';
+import { getAdminToken } from '@/lib/queryClient';
 
 interface FileUploadProps {
   onFileUploaded: (url: string) => void;
@@ -57,8 +58,10 @@ export default function FileUpload({
       formData.append(endpoint.includes('logo') ? 'logo' :
                      endpoint.includes('favicon') ? 'favicon' : 'image', file);
 
+      const adminToken = getAdminToken();
       const response = await fetch(endpoint, {
         method: 'POST',
+        headers: adminToken ? { Authorization: `Bearer ${adminToken}` } : undefined,
         body: formData,
       });
 
