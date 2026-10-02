@@ -6,6 +6,8 @@ import path from "path";
 import fs from "fs";
 import { storage } from "./storage";
 import { z } from "zod";
+import bcrypt from "bcrypt";
+import { requireUser } from "./user-auth";
 import { requireAdmin } from "./admin-auth";
 import { insertOrderSchema, insertReservationSchema, insertMenuItemSchema, insertCategorySchema, insertWebsiteSettingsSchema } from "@shared/schema";
 
@@ -44,6 +46,30 @@ const storage_ = multer.diskStorage({
     cb(null, uniqueName);
   }
 });
+
+const customerRegisterSchema = z.object({
+  name: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(255),
+  phone: z.string().trim().min(7).max(20),
+  password: z.string().min(8).max(128),
+});
+
+const customerLoginSchema = z.object({
+  email: z.string().trim().email().max(255),
+  password: z.string().min(1).max(128),
+});
+
+function serializeUser(user: Awaited<ReturnType<typeof storage.getUser>>) {
+  if (!user) return null;
+  return {
+    id: user.id,
+    name: user.fullName,
+    fullName: user.fullName,
+    email: user.email,
+    phone: user.phoneNumber,
+    role: user.role,
+  };
+}
 
 const upload = multer({ 
   storage: storage_,
@@ -86,6 +112,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/favicon.ico', (req, res) => {
     res.status(204).end();
   });
+  // Customer authentication routes
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const data = customerRegisterSchema.parse(req.body);
+      const email = data.email.toLowerCase();
+
+      if (await storage.getUserByEmail(email)) {
+        return res.status(409).json({ message: "Email is already registered" });
+      }
+
+      const user = await storage.createUser({
+        fullName: data.name,
+        email,
+        phoneNumber: data.phone,
+        passwordHash: data.password,
+        role: "customer",
+      });
+
+      req.session.userId = user.id;
+      req.session.userRole = user.role;
+
+      res.status(201).json({ user: serializeUser(user) });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid registration data", errors: error.errors });
+      }
+      console.error("Error registering customer:", error);
+      res.status(500).json({ message: "Failed to create account" });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const data = customerLoginSchema.parse(req.body);
+      const user = await storage.getUserByEmail(data.email.toLowerCase());
+
+      if (!user || !(await bcrypt.compare(data.password, user.passwordHash))) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      req.session.userId = user.id;
+      req.session.userRole = user.role;
+
+      res.json({ user: serializeUser(user) });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid login data", errors: error.errors });
+      }
+      console.error("Error logging in customer:", error);
+      res.status(500).json({ message: "Failed to log in" });
+    }
+  });
+
+  app.get("/api/auth/session", async (req, res) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ authenticated: false });
+    }
+
+    const user = await storage.getUser(req.session.userId);
+    if (!user) {
+      req.session.destroy(() => undefined);
+      return res.status(401).json({ authenticated: false });
+    }
+
+    res.json({ authenticated: true, user: serializeUser(user) });
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy((error) => {
+      if (error) {
+        return res.status(500).json({ message: "Failed to log out" });
+      }
+      res.clearCookie("chickenhat.sid");
+      res.status(204).end();
+    });
+  });
+
+  app.get("/api/me/orders", requireUser, async (req, res) => {
+    const orders = await storage.getUserOrders(req.session.userId!);
+    res.json(orders);
+  });
+
+  app.get("/api/me/reservations", requireUser, async (req, res) => {
+    const reservations = await storage.getUserReservations(req.session.userId!);
+    res.json(reservations);
+  });
+
   // Menu routes
   app.get("/api/categories", async (req, res) => {
     try {
@@ -147,7 +260,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         longitude,
       } : {};
 
-      const order = await storage.createOrder({ ...orderData, ...locationData }, items);
+      const order = await storage.createOrder(
+        { ...orderData, ...locationData, userId: req.session.userId ?? null },
+        items,
+      );
       res.json(order);
     } catch (error) {
       console.error("Error creating order:", error);
@@ -200,7 +316,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/reservations", async (req, res) => {
     try {
       const validatedData = insertReservationSchema.parse(req.body);
-      const reservation = await storage.createReservation(validatedData);
+      const reservation = await storage.createReservation({
+        ...validatedData,
+        userId: req.session.userId ?? null,
+      });
       res.json(reservation);
     } catch (error) {
       console.error("Error creating reservation:", error);
