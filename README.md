@@ -1,5 +1,15 @@
 # Chicken Hat — Restaurant Management System
 
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=111)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000000?style=flat-square&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Drizzle-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![RTL](https://img.shields.io/badge/Arabic_RTL-111111?style=flat-square)
+
+**Arabic-first full-stack ordering and restaurant operations platform.**
+
+[Runtime](package.json) · [Database Config](drizzle.config.ts) · [Source Archive](ChickenHatPlatform_705.zip)
+
 Arabic-first **full-stack restaurant ordering and management system** for a fried-chicken business. The project combines a customer storefront with operational tools for orders, menu items, reservations, users, and payments.
 
 ## Portfolio Proof
