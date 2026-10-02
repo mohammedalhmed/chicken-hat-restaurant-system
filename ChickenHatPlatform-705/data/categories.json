@@ -1,0 +1,34 @@
+[
+  {
+    "id": "5d813b9a-13d1-4822-abfe-10e323693420",
+    "name": "Fried Chicken",
+    "nameAr": "دجاج مقلي",
+    "description": "Crispy fried chicken pieces",
+    "orderIndex": 1,
+    "createdAt": "2025-08-17T05:00:13.390Z"
+  },
+  {
+    "id": "2964d7d3-0773-45cb-afa8-b72408c9f427",
+    "name": "Broasted Chicken",
+    "nameAr": "دجاج بروستد",
+    "description": "Tender broasted chicken",
+    "orderIndex": 2,
+    "createdAt": "2025-08-17T05:00:13.390Z"
+  },
+  {
+    "id": "dd12ff64-a537-4895-9edc-bb80154b937f",
+    "name": "Sides",
+    "nameAr": "الأطباق الجانبية",
+    "description": "Delicious side dishes",
+    "orderIndex": 3,
+    "createdAt": "2025-08-17T05:00:13.390Z"
+  },
+  {
+    "id": "d9f10479-7567-49b3-8e9b-a248ee73fdae",
+    "name": "Beverages",
+    "nameAr": "المشروبات",
+    "description": "Refreshing drinks",
+    "orderIndex": 4,
+    "createdAt": "2025-08-17T05:00:13.390Z"
+  }
+]
