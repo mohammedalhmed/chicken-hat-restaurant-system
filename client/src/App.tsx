@@ -31,6 +31,7 @@ import ReservationsManagement from "@/pages/admin/reservations";
 import WebsiteSettings from "@/pages/admin/website-settings";
 import AdminLoginPage from "@/pages/admin/login";
 import AdminGuard from "@/components/admin/admin-guard";
+import UserGuard from "@/components/auth/user-guard";
 
 // Layout Components
 import Navbar from "@/components/layout/navbar";
@@ -42,6 +43,7 @@ const ProtectedMenuManagement = () => <AdminGuard><MenuManagement /></AdminGuard
 const ProtectedOrdersManagement = () => <AdminGuard><OrdersManagement /></AdminGuard>;
 const ProtectedReservationsManagement = () => <AdminGuard><ReservationsManagement /></AdminGuard>;
 const ProtectedWebsiteSettings = () => <AdminGuard><WebsiteSettings /></AdminGuard>;
+const ProtectedUserDashboard = () => <UserGuard><UserDashboardPage /></UserGuard>;
 
 function App() {
   return (
@@ -59,7 +61,7 @@ function App() {
             <Route path="/offers" component={OffersPage} />
             <Route path="/favorites" component={FavoritesPage} />
             <Route path="/reviews" component={ReviewsPage} />
-            <Route path="/user-dashboard" component={UserDashboardPage} />
+            <Route path="/user-dashboard" component={ProtectedUserDashboard} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/contact" component={ContactPage} />
             <Route path="/login" component={LoginPage} />
