@@ -136,7 +136,7 @@ export class FileBasedStorage implements IStorage {
   }
 
   // Order operations
-  async createOrder(orderData: InsertOrder & { latitude?: number; longitude?: number }, items: Omit<InsertOrderItem, 'orderId'>[]): Promise<OrderWithItems> {
+  async createOrder(orderData: InsertOrder, items: Omit<InsertOrderItem, 'orderId'>[]): Promise<OrderWithItems> {
     return await fileStorage.createOrder(orderData, items);
   }
 
