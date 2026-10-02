@@ -8,7 +8,7 @@
 
 **Arabic-first full-stack ordering and restaurant operations platform.**
 
-[Runtime](package.json) · [Database Config](drizzle.config.ts) · [Source Archive](ChickenHatPlatform_705.zip)
+[Runtime](package.json) · [Frontend](client/) · [Backend](server/) · [Database Schema](shared/schema.ts)
 
 Arabic-first **full-stack restaurant ordering and management system** for a fried-chicken business. The project combines a customer storefront with operational tools for orders, menu items, reservations, users, and payments.
 
@@ -20,10 +20,20 @@ Arabic-first **full-stack restaurant ordering and management system** for a frie
 | **Solution** | React/TypeScript frontend with an Express backend, PostgreSQL/Drizzle data layer, sessions, role-based workflows, and payment integration support. |
 | **Runtime stack** | [package.json](package.json) |
 | **Database configuration** | [drizzle.config.ts](drizzle.config.ts) |
-| **Source package** | [ChickenHatPlatform_705.zip](ChickenHatPlatform_705.zip) |
-| **Current repository status** | The complete source is currently preserved as an archive while configuration files remain directly browsable. The next repository-cleanup step is to expand the source into normal GitHub folders without losing history. |
+| **Frontend source** | [client/](client/) |
+| **Backend source** | [server/](server/) |
+| **Shared schema** | [shared/schema.ts](shared/schema.ts) |
+| **Current repository status** | Source is directly browsable from the repository root; runtime order/customer data is excluded from version control. |
 
 
+
+## Screenshots
+
+<p>
+  <img src="docs/screenshots/mobile-preview-1.jpg" width="30%" alt="Chicken Hat mobile preview 1" />
+  <img src="docs/screenshots/mobile-preview-2.jpg" width="30%" alt="Chicken Hat mobile preview 2" />
+  <img src="docs/screenshots/mobile-preview-3.jpg" width="30%" alt="Chicken Hat mobile preview 3" />
+</p>
 
 ## Highlights
 
