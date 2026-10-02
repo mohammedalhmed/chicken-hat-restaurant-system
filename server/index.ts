@@ -33,7 +33,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     serveStatic(app);
   }
 
-  const PORT = process.env.PORT || 5000;
+  const PORT = Number(process.env.PORT ?? 5000);
+  if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
+    throw new Error("PORT must be a valid TCP port");
+  }
+
   server.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`File-based storage system initialized successfully`);
