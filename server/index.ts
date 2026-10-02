@@ -1,4 +1,4 @@
-import express, { type Request, Response, NextFunction } from "express";
+import express from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic } from "./vite";
 import { initializeMenuItems } from "./initialize-data";
@@ -6,19 +6,6 @@ import { initializeMenuItems } from "./initialize-data";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// Enable CORS for all routes
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-
-  if (req.method === "OPTIONS") {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
 
 (async () => {
   // Initialize sample data
