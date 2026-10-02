@@ -29,14 +29,6 @@ Arabic-first **full-stack restaurant ordering and management system** for a frie
 
 
 
-## Screenshots
-
-<p>
-  <img src="docs/screenshots/mobile-preview-1.jpg" width="30%" alt="Chicken Hat mobile preview 1" />
-  <img src="docs/screenshots/mobile-preview-2.jpg" width="30%" alt="Chicken Hat mobile preview 2" />
-  <img src="docs/screenshots/mobile-preview-3.jpg" width="30%" alt="Chicken Hat mobile preview 3" />
-</p>
-
 ## Highlights
 
 - Arabic RTL customer experience.
