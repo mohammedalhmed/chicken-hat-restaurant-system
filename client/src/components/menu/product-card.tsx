@@ -27,8 +27,8 @@ export default function ProductCard({ item, onImageClick, isFavorite = false, on
         id: item.id,
         name: item.name,
         nameAr: item.nameAr,
-        description: item.description,
-        descriptionAr: item.descriptionAr,
+        description: item.description ?? undefined,
+        descriptionAr: item.descriptionAr ?? undefined,
         price: parseFloat(item.price),
         imageUrl: item.imageUrl || "/placeholder-food.jpg",
       });
