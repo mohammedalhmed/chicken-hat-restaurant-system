@@ -52,21 +52,27 @@ async function ensureDirectories() {
 // Generic file operations
 async function readFile<T>(filePath: string): Promise<T[]> {
   try {
-    const data = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(data);
+    const data = await fs.readFile(filePath, "utf-8");
+    return JSON.parse(data) as T[];
   } catch (error) {
-    // If file doesn't exist, return empty array
-    return [];
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return [];
+    }
+    throw error;
   }
 }
 
 async function writeFile<T>(filePath: string, data: T[]): Promise<void> {
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+  const tempPath = `${filePath}.tmp-${process.pid}-${randomUUID()}`;
+  await fs.writeFile(tempPath, JSON.stringify(data, null, 2), "utf-8");
+  await fs.rename(tempPath, filePath);
 }
 
 export class FileStorage {
+  readonly ready: Promise<void>;
+
   constructor() {
-    this.initialize();
+    this.ready = this.initialize();
   }
 
   private async initialize() {
