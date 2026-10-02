@@ -2,13 +2,15 @@ import express from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic } from "./vite";
 import { initializeMenuItems } from "./initialize-data";
+import { fileStorage } from "./file-storage";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 (async () => {
-  // Initialize sample data
+  // Ensure file-backed storage is initialized before sample data or routes use it.
+  await fileStorage.ready;
   await initializeMenuItems();
   
   const server = await registerRoutes(app);
